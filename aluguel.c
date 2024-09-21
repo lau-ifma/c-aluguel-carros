@@ -88,6 +88,26 @@ void salvarCarros(Carro *carros, int count){
     fclose(file);
 }
 
+// Função para adicionar um novo carro
+void adicionarCarro(Carro *carros, int *count) {
+    if (*count >= MAX_CARROS) {
+        printf("Nao é possivel adicionar mais carros. Limite atingido.\n");
+        return;
+    }
+
+    Carro novoCarro;
+    novoCarro.id = *count + 1; // ID automático
+    printf("Digite o nome do carro: ");
+    scanf(" %[^\n]", novoCarro.nome); // Leitura do nome com espaços
+    printf("Digite o ano do carro: ");
+    scanf("%d", &novoCarro.ano);
+    strcpy(novoCarro.disponibilidade, "Disponivel"); // Definindo a disponibilidade
+
+    carros[*count] = novoCarro; // Adiciona o novo carro
+    (*count)++;
+    printf("Carro %s adicionado com sucesso!\n", novoCarro.nome);
+}
+
 // Função principal
 int main(){
     FILE *file;
@@ -116,7 +136,8 @@ int main(){
         printf("1 - Ver catalogo de carros\n");
         printf("2 - Alugar carro\n");
         printf("3 - Receber carro\n");
-        printf("4 - Sair\n");
+        printf("4 - Novo carro\n");
+        printf("0 - Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
 
@@ -136,14 +157,18 @@ int main(){
             receberCarro(carros, count);
             salvarCarros(carros, count);
         }
-        else if (opcao == 4){
+        else if (opcao == 0){
             printf("Saindo...\n");
+        }
+        else if (opcao == 4){
+           adicionarCarro(carros, &count);
+            salvarCarros(carros, count);
         }
         else{
             printf("Opcao invalida.\n");
         }
 
-    } while (opcao != 4);
+    } while (opcao != 0);
 
     return 0;
 }

@@ -1,0 +1,11 @@
+1,Fiesta,2020,Disponivel
+2,Civic,2019,Disponivel
+3,Onix,2021,Indisponivel
+4,Camaro,2015,Indisponivel
+5,Fusca,1985,Indisponivel
+6,Gol,2008,Disponivel
+7,Corolla,2023,Disponivel
+8,Golf,2018,Disponivel
+9,Palio,2009,Indisponivel
+10,Hillux ,1998,Disponivel
+11,Classic,2010,Disponivel
