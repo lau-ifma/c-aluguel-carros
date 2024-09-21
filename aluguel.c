@@ -6,8 +6,7 @@
 #define MAX_NOME 50
 
 // Estrutura para armazenar dados do carro
-typedef struct
-{
+typedef struct{
     int id;
     char nome[MAX_NOME];
     int ano;
@@ -15,112 +14,82 @@ typedef struct
 } Carro;
 
 // Função para imprimir a lista de carros
-void imprimirCarros(Carro *carros, int count)
-{
+void imprimirCarros(Carro *carros, int count){
     printf("Lista de Carros:\n");
-    for (int i = 0; i < count; i++)
-    {
-        printf("ID: %d, Nome: %s, Ano: %d, Disponibilidade: %s\n",
-               (carros + i)->id, (carros + i)->nome, (carros + i)->ano, (carros + i)->disponibilidade);
+    for (int i = 0; i < count; i++){
+        printf("ID: %d,  NOME: %s,  ANO: %d,  SITUACAO: %s\n",
+               carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
 }
 
-// Função para exibir apenas os carros disponíveis
-void mostrarCarrosDisponiveis(Carro *carros, int count)
-{
+// Função para mostrar apenas os carros disponíveis
+void mostrarCarrosDisponiveis(Carro *carros, int count){
     printf("Carros Disponiveis:\n");
-    for (int i = 0; i < count; i++)
-    {
-        if (strcmp((carros + i)->disponibilidade, "Disponivel") == 0)
-        {
-            printf("ID: %d, Nome: %s, Ano: %d\n",
-                   (carros + i)->id, (carros + i)->nome, (carros + i)->ano);
+    for (int i = 0; i < count; i++){
+        if (strcmp(carros[i].disponibilidade, "Disponivel") == 0){
+            printf("ID: %d, NOME: %s, ANO: %d\n", carros[i].id, carros[i].nome, carros[i].ano);
         }
     }
 }
 
-// Função para alugar um carro (atualizar disponibilidade)
-void alugarCarro(Carro *carros, int count)
-{
-    int idCarro, alugado = 0;
+void mostrarCarrosIndisponiveis(Carro *carros, int count){
+    printf("Carros Alugados:\n");
+    for (int i = 0; i < count; i++){
+        if (strcmp(carros[i].disponibilidade, "Indisponivel") == 0){
+            printf("ID: %d, NOME: %s, ANO: %d\n", carros[i].id, carros[i].nome, carros[i].ano);
+        }
+    }
+}
 
-    mostrarCarrosDisponiveis(carros, count); // Mostra os carros disponíveis
+// Função para alugar um carro
+void alugarCarro(Carro *carros, int count){
+    int idCarro;
     printf("Digite o ID do carro que deseja alugar: ");
     scanf("%d", &idCarro);
 
-    // Procura pelo carro com o ID informado
-    for (int i = 0; i < count; i++)
-    {
-        if ((carros + i)->id == idCarro && strcmp((carros + i)->disponibilidade, "Disponivel") == 0)
-        {
-            strcpy((carros + i)->disponibilidade, "Indisponivel");
-            printf("Carro %s alugado com sucesso!\n", (carros + i)->nome);
-            alugado = 1;
-            break;
+    for (int i = 0; i < count; i++){
+        if (carros[i].id == idCarro && strcmp(carros[i].disponibilidade, "Disponivel") == 0){
+            strcpy(carros[i].disponibilidade, "Indisponivel");
+            printf("Carro %s alugado com sucesso!\n", carros[i].nome);
+            return;
         }
     }
-
-    if (!alugado)
-    {
-        printf("Carro nao disponível ou ID invalido.\n");
-    }
+    printf("Carro nao disponível ou ID invalido.\n");
 }
 
-// RECEBER (atualizar disponibilidade)
-void ReceberCarro(Carro *carros, int count)
-{
-    int idCarro, devolvido = 0;
-    printf("Carros alugados:\n");
-    for (int i = 0; i < count; i++)
-    {
-        if (strcmp((carros + i)->disponibilidade, "Indisponivel") == 0)
-        {
-            printf("ID: %d, Nome: %s, Ano: %d\n",
-                   (carros + i)->id, (carros + i)->nome, (carros + i)->ano);
-        }
-    }
+// Função para receber um carro de volta
+void receberCarro(Carro *carros, int count){
+    int idCarro;
     printf("Digite o ID do carro que deseja receber de volta: ");
     scanf("%d", &idCarro);
 
-    // Procura pelo carro com o ID informado
-    for (int i = 0; i < count; i++)
-    {
-        if ((carros + i)->id == idCarro && strcmp((carros + i)->disponibilidade, "Indisponivel") == 0)
-        {
-            strcpy((carros + i)->disponibilidade, "Disponivel");
-            printf("Carro %s recebido com sucesso!\n", (carros + i)->nome);
-            devolvido = 1;
-            break;
+    for (int i = 0; i < count; i++){
+        if (carros[i].id == idCarro && strcmp(carros[i].disponibilidade, "Indisponivel") == 0){
+            strcpy(carros[i].disponibilidade, "Disponivel");
+            printf("Carro %s recebido com sucesso!\n", carros[i].nome);
+            return;
         }
     }
-
-    if (!devolvido)
-    {
-        printf("Carro nao disponivel ou ID invalido.\n");
-    }
+    printf("ID invalido ou o carro ja esta disponivel.\n");
 }
 
-// Função para salvar a lista de carros atualizada no arquivo
-void salvarCarros(Carro *carros, int count)
-{
+// Função para salvar os carros atualizados no arquivo
+void salvarCarros(Carro *carros, int count){
     FILE *file = fopen("carros.txt", "w");
-    if (file == NULL)
-    {
+    if (file == NULL){
         printf("Erro ao salvar o arquivo.\n");
         return;
     }
 
-    // Regrava todos os carros no arquivo
-    for (int i = 0; i < count; i++)
-    {
-        fprintf(file, "%d,%s,%d,%s\n", (carros + i)->id, (carros + i)->nome, (carros + i)->ano, (carros + i)->disponibilidade);
+    for (int i = 0; i < count; i++){
+        fprintf(file, "%d,%s,%d,%s\n", carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
 
     fclose(file);
 }
 
-int main()
-{
+// Função principal
+int main(){
     FILE *file;
     Carro carros[MAX_CARROS];
     char linha[256];
@@ -129,57 +98,52 @@ int main()
 
     // Carrega os carros do arquivo
     file = fopen("carros.txt", "r");
-    if (file == NULL)
-    {
+    if (file == NULL){
         printf("Erro ao abrir o arquivo.\n");
         return 1;
     }
 
-    // Lê cada linha do arquivo
-    while (fgets(linha, sizeof(linha), file) != NULL)
-    {
-
-        linha[strcspn(linha, "\n")] = '\0'; // Remove o "\n" e coloca "\0"
-
+    while (fgets(linha, sizeof(linha), file) != NULL){
+        linha[strcspn(linha, "\n")] = '\0'; // Remove o "\n"
         sscanf(linha, "%d,%49[^,],%d,%49[^,]", &carros[count].id, carros[count].nome, &carros[count].ano, carros[count].disponibilidade);
         count++;
     }
     fclose(file);
 
-    // Menu interativo
-    do
-    {
+    // Menu
+    do{
         printf("\n=== LOCADORA DE VEICULOS ===\n");
-        printf("1 - Catalogo de carros\n");
-        printf("2 - Alugar veiculo\n");
-        printf("3 - Sair\n");
-        printf("4 - Receber veiculo\n");
+        printf("1 - Ver catalogo de carros\n");
+        printf("2 - Alugar carro\n");
+        printf("3 - Receber carro\n");
+        printf("4 - Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
 
-        switch (opcao)
-        {
-        case 1:
-            system("cls"); // Limpa a tela
+        if (opcao == 1){
+            system("cls");
             imprimirCarros(carros, count);
-            break;
-        case 2:
-            system("cls"); // Limpa a tela
-            alugarCarro(carros, count);
-            salvarCarros(carros, count); // Salva o arquivo atualizado
-            break;
-        case 3:
-            printf("Saindo...\n");
-            break;
-        case 4:
-            system("cls"); // Limpa a tela
-            ReceberCarro(carros, count);
-            salvarCarros(carros, count); // Salva o arquivo atualizado
-            break;
-        default:
-            printf("opcao invalida.\n");
         }
-    } while (opcao != 3);
+        else if (opcao == 2){
+            system("cls");
+            mostrarCarrosDisponiveis(carros, count);
+            alugarCarro(carros, count);
+            salvarCarros(carros, count);
+        }
+        else if (opcao == 3){
+            system("cls");
+            mostrarCarrosIndisponiveis(carros, count);
+            receberCarro(carros, count);
+            salvarCarros(carros, count);
+        }
+        else if (opcao == 4){
+            printf("Saindo...\n");
+        }
+        else{
+            printf("Opcao invalida.\n");
+        }
+
+    } while (opcao != 4);
 
     return 0;
 }
