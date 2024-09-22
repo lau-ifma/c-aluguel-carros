@@ -5,7 +5,6 @@
 #define MAX_CARROS 100
 #define MAX_NOME 50
 
-// Estrutura para armazenar dados do carro
 typedef struct{
     int id;
     char nome[MAX_NOME];
@@ -13,7 +12,6 @@ typedef struct{
     char disponibilidade[MAX_NOME];
 } Carro;
 
-// Função para imprimir a lista de carros
 void imprimirCarros(Carro *carros, int count){
     printf("Lista de Carros:\n");
     for (int i = 0; i < count; i++){
@@ -163,9 +161,12 @@ int main(){
         else if (opcao == 4){
            adicionarCarro(carros, &count);
             salvarCarros(carros, count);
+            system("pause");
         }
         else{
             printf("Opcao invalida.\n");
+            system("pause");
+            system("cls");
         }
 
     } while (opcao != 0);
