@@ -122,6 +122,7 @@ int main() {
         pont_arq = fopen("carros.txt", "r"); // abrindo arqvo novamente p/ leitura
     }
 
+    // lê uma linha de (pont_arq) e armazena na variavell -> linha
     while (fgets(linha, sizeof(linha), pont_arq) != NULL) {
         linha[strcspn(linha, "\n")] = '\0'; // Remover o "\n"
         sscanf(linha, "%d,%49[^,],%d,%49[^,]", &carros[qtd].id, carros[qtd].nome, &carros[qtd].ano, carros[qtd].disponibilidade);
