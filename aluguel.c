@@ -19,7 +19,6 @@ void imprimirCarros(Carro *carros, int qtd){
     }
 }
 
-// Função para mostrar apenas os carros disponíveis
 void mostrarCarrosDisponiveis(Carro *carros, int qtd){
     printf("Carros Disponiveis:\n");
     for (int i = 0; i < qtd; i++){
@@ -38,7 +37,6 @@ void mostrarCarrosIndisponiveis(Carro *carros, int qtd){
     }
 }
 
-// Função para alugar um carro
 void alugarCarro(Carro *carros, int qtd){
     int idCarro;
     printf("Digite o ID do carro que deseja alugar: ");
@@ -51,10 +49,10 @@ void alugarCarro(Carro *carros, int qtd){
             return;
         }
     }
-    printf("Carro nao disponível ou ID invalido.\n");
+    printf("Carro nao disponivel ou ID invalido.\n");
 }
 
-// Função para receber um carro de volta
+// receber um carro de volta
 void receberCarro(Carro *carros, int qtd){
     int idCarro;
     printf("Digite o ID do carro que deseja receber de volta: ");
@@ -72,60 +70,58 @@ void receberCarro(Carro *carros, int qtd){
 
 // Função para salvar os carros atualizados no arquivo
 void salvarCarros(Carro *carros, int qtd){
-    FILE *file = fopen("carros.txt", "w");
-    if (file == NULL){
+    FILE *pont_arq = fopen("carros.txt", "w");
+    if (pont_arq == NULL){
         printf("Erro ao salvar o arquivo.\n");
         return;
     }
 
     for (int i = 0; i < qtd; i++){
-        fprintf(file, "%d,%s,%d,%s\n", carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
+        fprintf(pont_arq, "%d,%s,%d,%s\n", carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
 
-    fclose(file);
+    fclose(pont_arq);
 }
 
 // Função para adicionar um novo carro
 void adicionarCarro(Carro *carros, int *qtd) {
     if (*qtd >= MAX_CARROS) {
-        printf("Nao é possivel adicionar mais carros. Limite atingido.\n");
+        printf("Nao eh possivel adicionar mais carros. Limite atingido.\n");
         return;
     }
 
     Carro novoCarro;
-    novoCarro.id = *qtd + 1; // ID automático
+    novoCarro.id = *qtd + 1; // ID automatico
     printf("Digite o nome do carro: ");
-    scanf(" %[^\n]", novoCarro.nome); // Leitura do nome com espaços
+    scanf(" %[^\n]", novoCarro.nome);  // LER NOME COM ESPACOS
     printf("Digite o ano do carro: ");
     scanf("%d", &novoCarro.ano);
-    strcpy(novoCarro.disponibilidade, "Disponivel"); // Definindo a disponibilidade
+    strcpy(novoCarro.disponibilidade, "Disponivel");
 
     carros[*qtd] = novoCarro; // Adiciona o novo carro
     (*qtd)++;
     printf("Carro %s adicionado com sucesso!\n", novoCarro.nome);
 }
 
-// Função principal
 int main(){
-    FILE *file;
+    FILE *pont_arq;
     Carro carros[MAX_CARROS];
     char linha[256];
     int qtd = 0;
     int opcao;
 
-    // Carrega os carros do arquivo
-    file = fopen("carros.txt", "r");
-    if (file == NULL){
+    pont_arq = fopen("carros.txt", "r"); 
+    if (pont_arq == NULL){
         printf("Erro ao abrir o arquivo.\n");
         return 1;
     }
 
-    while (fgets(linha, sizeof(linha), file) != NULL){
-        linha[strcspn(linha, "\n")] = '\0'; // Remove o "\n"
+    while (fgets(linha, sizeof(linha), pont_arq) != NULL){
+        linha[strcspn(linha, "\n")] = '\0'; // Remover o "\n"
         sscanf(linha, "%d,%49[^,],%d,%49[^,]", &carros[qtd].id, carros[qtd].nome, &carros[qtd].ano, carros[qtd].disponibilidade);
         qtd++;
     }
-    fclose(file);
+    fclose(pont_arq);
 
     // Menu
     do{
