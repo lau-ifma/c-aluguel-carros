@@ -5,8 +5,3 @@
 5,Fusca,1985,Indisponivel
 6,Gol,2008,Indisponivel
 7,Corolla,2023,Disponivel
-8,Uno,2019,Disponivel
-9,Toro,2022,Disponivel
-10,L200,2020,Disponivel
-11,s10,2020,Disponivel
-12,fusca,2020,Disponivel
