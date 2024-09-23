@@ -11,45 +11,55 @@ typedef struct {
     char disponibilidade[50];
 } Carro;
 
-// Funções para manipulação de carros (sem alterações)
+// Funções para manipulação de carros
 
 void imprimirCarros(Carro *carros, int qtd) {
-	int i;
-    printf("Lista de Carros:\n");
+    int i;
+    printf("\n---------- Lista de Carros ----------\n\n");
     for (i = 0; i < qtd; i++) {
         printf("ID: %d,  NOME: %s,  ANO: %d,  SITUACAO: %s\n",
                carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
 }
 
-void mostrarCarrosDisponiveis(Carro *carros, int qtd) {
-    printf("Carros Disponiveis:\n");
-    int i;
+int mostrarCarrosDisponiveis(Carro *carros, int qtd) {
+    printf("\n----- Carros disponiveis para alugar -----\n\n");
+    int i; int qtd_disponiveis = 0;
     for (i = 0; i < qtd; i++) {
         if (strcmp(carros[i].disponibilidade, "Disponivel") == 0) {
             printf("ID: %d, NOME: %s, ANO: %d\n", carros[i].id, carros[i].nome, carros[i].ano);
+            qtd_disponiveis++;
         }
     }
+    if(qtd_disponiveis == 0){
+		printf("\nNenhum carro disponivel para alugar!\n");
+		return 0;
+	}
 }
 
-void mostrarCarrosIndisponiveis(Carro *carros, int qtd) {
-    printf("Carros Alugados:\n");
-    int i;
+int mostrarCarrosIndisponiveis(Carro *carros, int qtd) {
+    printf("\n----- Carros Alugados -----\n\n");
+    int i; int qtd_alugados = 0;
     for (i = 0; i < qtd; i++) {
         if (strcmp(carros[i].disponibilidade, "Indisponivel") == 0) {
             printf("ID: %d, NOME: %s, ANO: %d\n", carros[i].id, carros[i].nome, carros[i].ano);
+            qtd_alugados++;
         }
     }
+      if(qtd_alugados == 0){
+		printf("\nNenhum carro alugado no momento!\n");
+		return 0;
+	}
 }
 
 void alugarCarro(Carro *carros, int qtd) {
-    int idCarro; int i;
-    printf("Digite o ID do carro que deseja alugar: ");
+    int idCarro, i;
+    printf("\nDigite o ID do carro que deseja alugar: ");
     scanf("%d", &idCarro);
     for (i = 0; i < qtd; i++) {
         if (carros[i].id == idCarro && strcmp(carros[i].disponibilidade, "Disponivel") == 0) {
             strcpy(carros[i].disponibilidade, "Indisponivel");
-            printf("Carro %s alugado com sucesso!\n", carros[i].nome);
+            printf("\nCarro %s alugado com sucesso!\n", carros[i].nome);
             return;
         }
     }
@@ -57,18 +67,41 @@ void alugarCarro(Carro *carros, int qtd) {
 }
 
 void receberCarro(Carro *carros, int qtd) {
-    int idCarro; int i;
-    printf("Digite o ID do carro que deseja receber de volta: ");
+    int idCarro, i;
+    printf("\nDigite o ID do carro que deseja receber de volta: ");
     scanf("%d", &idCarro);
 
     for (i = 0; i < qtd; i++) {
         if (carros[i].id == idCarro && strcmp(carros[i].disponibilidade, "Indisponivel") == 0) {
             strcpy(carros[i].disponibilidade, "Disponivel");
-            printf("Carro %s recebido com sucesso!\n", carros[i].nome);
+            printf("\nCarro %s recebido com sucesso!\n", carros[i].nome);
             return;
         }
     }
     printf("ID invalido ou o carro ja esta disponivel.\n");
+}
+
+void excluirCarro(Carro *carros, int *qtd) {
+    int idCarro, i, j;
+    printf("\n-------- Exclusao de Veiculo --------\n");
+    printf("\nDigite o ID do carro que deseja excluir: ");
+    scanf("%d", &idCarro);
+
+    for (i = 0; i < *qtd; i++) {
+        if (carros[i].id == idCarro) {
+            printf("\nCarro %s excluido com sucesso!\n", carros[i].nome);
+
+            // Mover os proximos carros, para uma posicao atraz
+            for (j = i; j < *qtd - 1; j++) {
+                carros[j] = carros[j + 1];
+            }
+            
+            (*qtd)--;
+
+            return;
+        }
+    }
+    printf("ID inválido.\n");
 }
 
 void salvarCarros(Carro *carros, int qtd) {
@@ -77,12 +110,23 @@ void salvarCarros(Carro *carros, int qtd) {
         printf("Erro ao salvar o arquivo.\n");
         return;
     }
-	int i;
+    int i;
     for (i = 0; i < qtd; i++) {
         fprintf(pont_arq, "%d,%s,%d,%s\n", carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
 
     fclose(pont_arq);
+}
+
+int obterProximoId(Carro *carros, int qtd) {
+    int maxId = 0;
+    int i;
+    for (i = 0; i < qtd; i++) {
+        if (carros[i].id > maxId) {
+            maxId = carros[i].id;
+        }
+    }
+    return maxId + 1;
 }
 
 void adicionarCarro(Carro *carros, int *qtd) {
@@ -92,8 +136,10 @@ void adicionarCarro(Carro *carros, int *qtd) {
     }
 
     Carro novoCarro;
-    novoCarro.id = *qtd + 1; // adiciona o Id
-    printf("Digite o nome do carro: ");
+    novoCarro.id = obterProximoId(carros, *qtd); // Garante ID único
+    system("cls");
+    printf("\n-------- Adicao de Veiculo --------\n");
+    printf("\nDigite o nome do carro: ");
     scanf(" %[^\n]", novoCarro.nome);  // LER NOME COM ESPACOS
     printf("Digite o ano do carro: ");
     scanf("%d", &novoCarro.ano);
@@ -101,7 +147,7 @@ void adicionarCarro(Carro *carros, int *qtd) {
 
     carros[*qtd] = novoCarro; // Adiciona o novo carro
     (*qtd)++;
-    printf("Carro %s adicionado com sucesso!\n", novoCarro.nome);
+    printf("\nCarro %s adicionado com sucesso!\n", novoCarro.nome);
 }
 
 int main() {
@@ -120,11 +166,12 @@ int main() {
         }
         fprintf(pont_arq, "1,Fiesta,2020,Disponivel\n"); 
         fprintf(pont_arq, "2,Onix,2022,Disponivel\n"); 
+        fprintf(pont_arq, "3,HB20,2021,Indisponivel\n"); 
         fclose(pont_arq);
-        pont_arq = fopen("carros.txt", "r"); // abrindo arqvo novamente p/ leitura
+        pont_arq = fopen("carros.txt", "r"); // abrindo arquivo novamente para leitura
     }
 
-    // lê uma linha de (pont_arq) e armazena na variavell -> linha
+    // Lê uma linha de (pont_arq) e armazena na variável -> linha
     while (fgets(linha, sizeof(linha), pont_arq) != NULL) {
         linha[strcspn(linha, "\n")] = '\0'; // Remover o "\n"
         sscanf(linha, "%d,%49[^,],%d,%49[^,]", &carros[qtd].id, carros[qtd].nome, &carros[qtd].ano, carros[qtd].disponibilidade);
@@ -134,13 +181,14 @@ int main() {
 
     // Menu
     do {
-        printf("\n=== LOCADORA DE VEICULOS ===\n");
+        printf("\n====== LOCADORA DE VEICULOS ======\n\n");
         printf("1 - Ver catalogo de carros\n");
         printf("2 - Alugar carro\n");
-        printf("3 - Receber carro\n");
-        printf("4 - Novo carro\n");
+        printf("3 - Receber carro de volta\n");
+        printf("4 - Adicionar carro\n");
+        printf("5 - Excluir carro\n");  // Nova opção para excluir
         printf("0 - Sair\n");
-        printf("Escolha uma opcao: ");
+        printf("\nEscolha uma opcao: ");
         scanf("%d", &opcao);
 
         if (opcao == 1) {
@@ -148,24 +196,41 @@ int main() {
             imprimirCarros(carros, qtd);
         } else if (opcao == 2) {
             system("cls");
-            mostrarCarrosDisponiveis(carros, qtd);
-            alugarCarro(carros, qtd);
-            salvarCarros(carros, qtd);
+            int q = mostrarCarrosDisponiveis(carros, qtd);
+            if (q != 0){
+            	alugarCarro(carros, qtd);
+            	salvarCarros(carros, qtd);	
+			}
+			system("pause"); 
+			system("cls");
+            
         } else if (opcao == 3) {
             system("cls");
-            mostrarCarrosIndisponiveis(carros, qtd);
-            receberCarro(carros, qtd);
-            salvarCarros(carros, qtd);
-        } else if (opcao == 0) {
-            printf("Saindo...\n");
+            int q = mostrarCarrosIndisponiveis(carros, qtd);
+            if (q != 0){
+				receberCarro(carros, qtd);
+            	salvarCarros(carros, qtd);
+			}
+			system("pause"); 
+			system("cls");
         } else if (opcao == 4) {
             adicionarCarro(carros, &qtd);
             salvarCarros(carros, qtd);
-            system("pause");
+            system("pause"); 
+			system("cls");
+        } else if (opcao == 5) {  
+        	system("cls");
+            imprimirCarros(carros, qtd);
+            excluirCarro(carros, &qtd);
+            salvarCarros(carros, qtd);
+            system("pause"); 
+			system("cls");
+        } else if (opcao == 0) {
+            printf("Saindo...\n");
         } else {
             printf("Opcao invalida.\n");
-            system("pause");
-            system("cls");
+            system("pause"); 
+			system("cls");
         }
 
     } while (opcao != 0);
