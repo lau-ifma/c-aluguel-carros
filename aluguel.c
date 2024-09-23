@@ -14,8 +14,9 @@ typedef struct {
 // Funções para manipulação de carros (sem alterações)
 
 void imprimirCarros(Carro *carros, int qtd) {
+	int i;
     printf("Lista de Carros:\n");
-    for (int i = 0; i < qtd; i++) {
+    for (i = 0; i < qtd; i++) {
         printf("ID: %d,  NOME: %s,  ANO: %d,  SITUACAO: %s\n",
                carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
@@ -23,7 +24,8 @@ void imprimirCarros(Carro *carros, int qtd) {
 
 void mostrarCarrosDisponiveis(Carro *carros, int qtd) {
     printf("Carros Disponiveis:\n");
-    for (int i = 0; i < qtd; i++) {
+    int i;
+    for (i = 0; i < qtd; i++) {
         if (strcmp(carros[i].disponibilidade, "Disponivel") == 0) {
             printf("ID: %d, NOME: %s, ANO: %d\n", carros[i].id, carros[i].nome, carros[i].ano);
         }
@@ -32,7 +34,8 @@ void mostrarCarrosDisponiveis(Carro *carros, int qtd) {
 
 void mostrarCarrosIndisponiveis(Carro *carros, int qtd) {
     printf("Carros Alugados:\n");
-    for (int i = 0; i < qtd; i++) {
+    int i;
+    for (i = 0; i < qtd; i++) {
         if (strcmp(carros[i].disponibilidade, "Indisponivel") == 0) {
             printf("ID: %d, NOME: %s, ANO: %d\n", carros[i].id, carros[i].nome, carros[i].ano);
         }
@@ -40,11 +43,10 @@ void mostrarCarrosIndisponiveis(Carro *carros, int qtd) {
 }
 
 void alugarCarro(Carro *carros, int qtd) {
-    int idCarro;
+    int idCarro; int i;
     printf("Digite o ID do carro que deseja alugar: ");
     scanf("%d", &idCarro);
-
-    for (int i = 0; i < qtd; i++) {
+    for (i = 0; i < qtd; i++) {
         if (carros[i].id == idCarro && strcmp(carros[i].disponibilidade, "Disponivel") == 0) {
             strcpy(carros[i].disponibilidade, "Indisponivel");
             printf("Carro %s alugado com sucesso!\n", carros[i].nome);
@@ -55,11 +57,11 @@ void alugarCarro(Carro *carros, int qtd) {
 }
 
 void receberCarro(Carro *carros, int qtd) {
-    int idCarro;
+    int idCarro; int i;
     printf("Digite o ID do carro que deseja receber de volta: ");
     scanf("%d", &idCarro);
 
-    for (int i = 0; i < qtd; i++) {
+    for (i = 0; i < qtd; i++) {
         if (carros[i].id == idCarro && strcmp(carros[i].disponibilidade, "Indisponivel") == 0) {
             strcpy(carros[i].disponibilidade, "Disponivel");
             printf("Carro %s recebido com sucesso!\n", carros[i].nome);
@@ -75,8 +77,8 @@ void salvarCarros(Carro *carros, int qtd) {
         printf("Erro ao salvar o arquivo.\n");
         return;
     }
-
-    for (int i = 0; i < qtd; i++) {
+	int i;
+    for (i = 0; i < qtd; i++) {
         fprintf(pont_arq, "%d,%s,%d,%s\n", carros[i].id, carros[i].nome, carros[i].ano, carros[i].disponibilidade);
     }
 
